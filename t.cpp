@@ -135,7 +135,6 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
     int i = somaVagas(esc);
     int j = 0;
     int pos =0;
-    cout << i ;
     string sub;
     string num = "";
     while( i != 0){ 
@@ -159,6 +158,7 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
             }
             j++;
         }
+        i--;
     }
     
 }
@@ -173,14 +173,14 @@ int main(){
     vector<Professor> prof;
     vector<Escola> esc;
     criaListaPref(prof,esc);
-    // galeShapley(prof,esc);
-    // printCasamento();
+    galeShapley(prof,esc);
+    printCasamento();
     
-    cout << prof.size() << " " << esc.size() << endl;
-     for(int i =0 ; i  < prof.size();i++){
-         cout << prof[i].name << " " << prof[i].hab << " " << prof[i].escolas[0] << " " << prof[i].escolas[1] << " " << prof[i].escolas[2] << " " << prof[i].escolas[3] << " " << prof[i].escolas[4] << endl;
-     }
-     for(int j =0 ; j < esc.size();j++){
-         cout << esc[j].name << " " <<  esc[j].hab << " " << esc[j].vagas << endl;
-     }
+    // cout << prof.size() << " " << esc.size() << endl;
+    //  for(int i =0 ; i  < prof.size();i++){
+    //      cout << prof[i].name << " " << prof[i].hab << " " << prof[i].escolas[0] << " " << prof[i].escolas[1] << " " << prof[i].escolas[2] << " " << prof[i].escolas[3] << " " << prof[i].escolas[4] << endl;
+    //  }
+    //  for(int j =0 ; j < esc.size();j++){
+    //      cout << esc[j].name << " " <<  esc[j].hab << " " << esc[j].vagas << endl;
+    //  }
 }
