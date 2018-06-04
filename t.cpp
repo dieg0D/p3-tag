@@ -6,8 +6,10 @@
 	Versão do compilador:g++ (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
 	Descricao: Este progama faz o maior emparelhamento estavel entre professores e escolas descrito no arquivo de entrada
 	Sites utilizados como referencia :
+    https://en.wikipedia.org/wiki/Stable_marriage_problem
+    https://www.geeksforgeeks.org/stable-marriage-problem/
 	Para executar utilize  g++ -std=c++11 t.cpp -o t e depois utlize ./t lembrando que para o funcionamento adequado
-	do progama os arquivos:
+	do progama o arquivo : entradaProj3TAG.txt  deve estar no mesmo diretorio do arquvio t.cpp
 */
 #include <iostream>
 #include <vector>
@@ -135,7 +137,6 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
     int i = somaVagas(esc);
     int j = 0;
     int pos =0;
-    cout << i ;
     string sub;
     string num = "";
     while( i != 0){ 
@@ -159,12 +160,18 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
             }
             j++;
         }
+        i--;
     }
     
 }
 
 void printCasamento(){
-    for(int i =0 ;i != casamentos.size();i++){
+    cout << "Casamentos estaveis: " <<endl<<endl;
+    cout << "hablitacao 1 - 16 vagas ---- 8  prof" << endl;
+    cout << "hablitacao 2 - 40 vagas ---- 40 profs" <<endl;
+    cout << "hablitacao 3 - 24 vagas ---- 17 profs" << endl << endl;
+
+    for (int i = 0; i != casamentos.size(); i++){
         cout << casamentos[i].first << "----"<< casamentos[i].second << endl;
     }
 }
@@ -173,14 +180,6 @@ int main(){
     vector<Professor> prof;
     vector<Escola> esc;
     criaListaPref(prof,esc);
-    // galeShapley(prof,esc);
-    // printCasamento();
-    
-    cout << prof.size() << " " << esc.size() << endl;
-     for(int i =0 ; i  < prof.size();i++){
-         cout << prof[i].name << " " << prof[i].hab << " " << prof[i].escolas[0] << " " << prof[i].escolas[1] << " " << prof[i].escolas[2] << " " << prof[i].escolas[3] << " " << prof[i].escolas[4] << endl;
-     }
-     for(int j =0 ; j < esc.size();j++){
-         cout << esc[j].name << " " <<  esc[j].hab << " " << esc[j].vagas << endl;
-     }
+    galeShapley(prof,esc);
+    printCasamento();
 }
