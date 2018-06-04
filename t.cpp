@@ -134,7 +134,7 @@ int somaVagas(vector<Escola> esc){
 void galeShapley(vector<Professor> prof, vector<Escola> esc){
     int i = somaVagas(esc);
     int j = 0;
-    int pos =0;
+    int pos =0, hab=0;
     string sub;
     string num = "";
     while( i != 0){ 
