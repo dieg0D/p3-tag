@@ -8,36 +8,37 @@
 	Sites utilizados como referencia :
 	Para executar utilize  g++ -std=c++11 t.cpp -o t e depois utlize ./t lembrando que para o funcionamento adequado
 	do progama os arquivos:
-     */
+*/
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <string>
 using namespace std;
-
+ vector<pair<string,string>> casamentos;
 class Professor{
-    string name ;
-    int hab ;
+  public:
+    string name;
+    int hab;
+    bool casado = false;
     vector<string> escolas;
 
-    public:
-        Professor(string name, int hab ,vector<string> escolas);
-        void galeShapley();
+    Professor(string name, int hab, vector<string> escolas);
 };
 
 Professor::Professor(string name, int hab, vector<string> escolas){
     this->name = name;
     this->hab = hab;
-    this->escolas = escolas; 
+    this->escolas = escolas;
 }
 
+
 class Escola{
+  public:
     string name;
     int hab;
     int vagas;
 
-    public:
-        Escola(string name, int hab, int vagas);
+    Escola(string name, int hab, int vagas);
 };
 
 Escola::Escola(string name, int hab, int vagas){
@@ -46,11 +47,12 @@ Escola::Escola(string name, int hab, int vagas){
     this->vagas = vagas;
 }
 
-void criaListaPref(vector<Professor> prof, vector<Escola> esc){
+
+void criaListaPref(vector<Professor>& prof, vector<Escola>& esc){
     ifstream file;
     string linha;
     string sub = "";
-    string name;
+    string name,comp;
     int hab;
     vector<string> escolas;
     int vagas;
@@ -69,7 +71,7 @@ void criaListaPref(vector<Professor> prof, vector<Escola> esc){
             }
             if((flag == 0) || (i == 0)){
                 for(int j = 0; j != linha.length() ;j++){
-                    if((linha[j] != ',') && (linha[j] != '(') && (linha[j] != ':') && (linha[j] != '\n')){
+                    if((linha[j] != ',') && (linha[j] != '(') && (linha[j]) != ':' ){
                         if ((linha[j] != ' ') && (linha[j] != ')')){
                             sub = sub + linha[j];
                         }
@@ -79,7 +81,9 @@ void criaListaPref(vector<Professor> prof, vector<Escola> esc){
                                 name = sub;
                             }
                             else if(spacecount == 2){
-                                hab = stoi(sub);
+                                if((sub != "e")&&( sub!="formato")){
+                                    hab = stoi(sub);
+                                }
                             }
                             else{
                                 escolas.push_back(sub);
@@ -88,7 +92,7 @@ void criaListaPref(vector<Professor> prof, vector<Escola> esc){
                         }
                     }
                 }
-                Professor p(name,hab,escolas);
+                Professor p(name, hab, escolas);
                 prof.push_back(p);
                 escolas.erase(escolas.begin(),escolas.end());
                 spacecount = 0;
@@ -96,20 +100,26 @@ void criaListaPref(vector<Professor> prof, vector<Escola> esc){
             }
             else{
                  for(int j = 0; j != linha.length() ;j++){
-                    if((linha[j] != '(') && (linha[j] != ':') && (linha[j] != '\n')){
+                    if((linha[j] != '(') && (linha[j] != ':')){
                         if ((linha[j] != ')')){
                             sub = sub + linha[j];
                         }
                         else{
                             spacecount++;
                             if(spacecount == 1){
-                                name = sub;
+                               name = sub;
                             }
                             else if(spacecount == 2){
-                                hab = stoi(sub);
+                               if((sub != "e")&&( sub!="formato")){
+                                    hab = stoi(sub);
+                                }
+                               cout << sub <<endl;
                             }
                             else{
-                                vagas = stoi(sub);
+                              if((sub != "e")&&( sub!="formato")){
+                                    vagas = stoi(sub);
+                                }
+                               cout << sub <<endl;
                             }
                             sub = "";
                         }
@@ -124,9 +134,64 @@ void criaListaPref(vector<Professor> prof, vector<Escola> esc){
     }
 }
 
+int somaVagas(vector<Escola> esc){
+    int soma= 0 ;
+    for (int i = 0 ; i != esc.size(); i++){
+        soma = soma + esc[i].vagas;
+    }
+    return soma;
+}
+
+void galeShapley(vector<Professor> prof, vector<Escola> esc){
+    int i = somaVagas(esc);
+    int j = 0;
+    int pos =0;
+    cout << i ;
+    string sub;
+    string num = "";
+    while( i != 0){ 
+        while(j != 99){
+            if(prof[j].casado == false){
+                for(int k = 0 ; k != 5 ; k++){
+                  sub = prof[j].escolas[k];
+                  for(int l =0; l != sub.length();l++){
+                      if ((sub[l] >= '0') && (sub[l] <= '9')){
+                          num = num + sub[l];
+                      }
+                  }
+                  pos = stoi(num);
+                  num = "";
+                  if((esc[pos].vagas != 0) && (esc[pos].hab == prof[j].hab)){
+                      prof[j].casado = true;
+                      esc[pos].vagas --;
+                      casamentos.push_back(make_pair(prof[j].name, esc[pos].name));
+                  }
+                }
+            }
+            j++;
+        }
+    }
+    
+}
+
+void printCasamento(){
+    for(int i =0 ;i != casamentos.size();i++){
+        cout << casamentos[i].first << "----"<< casamentos[i].second << endl;
+    }
+}
+
 int main(){
     vector<Professor> prof;
-    vector<Escola>esc;
+    vector<Escola> esc;
     criaListaPref(prof,esc);
-    
+    galeShapley(prof,esc);
+    printCasamento();
+     for(int i =0 ; i  < prof.size(); i++){
+         cout << prof[i].name << " " << prof[i].hab << " " << prof[i].escolas[0] << " " << prof[i].escolas[1] << " " << prof[i].escolas[2] << " " << prof[i].escolas[3] << " " << prof[i].escolas[4] << endl;
+     }
+
+     for(int j =0 ; j < esc.size();j++){
+         cout << esc[j].name << " " <<  esc[j].hab << " " << esc[j].vagas << endl;
+     }
+
 }
